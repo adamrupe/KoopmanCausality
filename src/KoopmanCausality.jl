@@ -1,4 +1,4 @@
-module KoopmanModels
+module KoopmanCausality
 import Distributions: Distribution, AbstractMvNormal
 import LinearAlgebra
 import DynamicalSystems: embed
@@ -28,7 +28,6 @@ export
     Koopman,
     PerronFrobenius,
     eigenfunc_eval,
-    # eigen,
     modes,
     delay_matrices,
     DMD,
@@ -47,11 +46,12 @@ export
     eigen_periods,
     mse
 
-include("CausalKoopman.jl")
+include("CausalDMD.jl")
 export 
     MarginalCausalKoopman,
     JointCausalKoopman,
     causal_DMD,
     causal_eval,
-    koopman_causality
+    koopman_causality,
+    RFF_koopman_causality
 end
