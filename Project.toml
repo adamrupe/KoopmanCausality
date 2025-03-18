@@ -1,0 +1,22 @@
+name = "KEWTip"
+authors = ["Adam Rupe <adam.rupe@pnnl.gov>"]
+
+[deps]
+Arpack = "7d9fca2a-8960-54d3-9f78-7d1dccf2cb97"
+Associations = "614afb3a-e278-4863-8805-9959372b9ec2"
+DifferentialEquations = "0c46a032-eb83-5123-abaf-570d42b7fbaa"
+Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
+DynamicalSystems = "61744808-ddfa-5f27-97ff-6e42cc95d634"
+IJulia = "7073ff75-c697-5162-941a-fcdaad2a7d2a"
+JLD2 = "033835bb-8acc-5ee8-8aae-3f567f8a3819"
+LaTeXStrings = "b964fa9f-0449-5b57-a5c2-d3ea65f4040f"
+MultivariateStats = "6f286f6a-111f-5878-ab1e-185364afe411"
+NPZ = "15e1cf62-19b3-5cfa-8e77-841668bca605"
+Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
+Revise = "295af30f-e4ad-537b-8983-00126c2a3abe"
+StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
+StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
+
+[compat]
+DifferentialEquations = "7.15.0"
+DynamicalSystems = "3.3.0"

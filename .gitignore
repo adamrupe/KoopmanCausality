@@ -1,0 +1,7 @@
+Manifest.toml
+*.ipynb_checkpoints/
+*/.ipynb_checkpoints
+.DS_Store
+*_dev.ipynb
+*_debug.ipynb
+*_refactor.ipynb
