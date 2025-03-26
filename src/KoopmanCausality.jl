@@ -1,5 +1,5 @@
 module KoopmanCausality
-import Distributions: Distribution, AbstractMvNormal
+import Distributions: Distribution, Normal, AbstractMvNormal
 import LinearAlgebra
 import DynamicalSystems: embed
 import Distances: euclidean
@@ -53,5 +53,6 @@ export
     causal_DMD,
     causal_eval,
     koopman_causality,
-    RFF_koopman_causality
+    RFF_koopman_causality_v1,
+    RFF_koopman_causality_v2
 end

@@ -80,31 +80,60 @@ function koopman_causality(
 end
 
 
-function RFF_koopman_causality(Xe, Xc, Ye, Xteste, Xtestc, Yteste, N_features, σs, N_samples)
-    Lσ = length(σs)
-    margs = Vector{Float64}(undef, Lσ*N_samples)
-    joints = Vector{Float64}(undef, Lσ*N_samples)
-
+function RFF_koopman_causality_base(Xe, Xc, Ye, Xteste, Xtestc, Yteste, N_features, σs, N_samples)
     N_vars_marg = size(Xe, 1)
     N_vars_joint = size(Xc, 1) + N_vars_marg
-    
+    marg_err = Inf
+    joint_err = Inf
+
     j = 1
     for σ in σs
         for _ in 1:N_samples
-            dist1 = Normal(0.0, σ)
-            marg_dict = RFF_dict(N_features, N_vars_marg, dist1)
+            marg_dist = Normal(0.0, σ)
+            marg_dict = RFF_dict(N_features, N_vars_marg, marg_dist)
             marg_model = causal_DMD(Xe, Ye, marg_dict)
-            margs[j]= causal_eval(Xteste, Yteste, marg_model)
+            marg = causal_eval(Xteste, Yteste, marg_model)
+            marg_err = min(marg_err, marg)
     
-            dist2 = Normal(0.0, σ)
-            joint_dict = RFF_dict(N_features, N_vars_joint, dist2)
+            joint_dist = Normal(0.0, σ)
+            joint_dict = RFF_dict(N_features, N_vars_joint, joint_dist)
             joint_model = causal_DMD(Xe, Xc, Ye, joint_dict)
-            joints[j] = causal_eval(Xteste, Xtestc, Yteste, joint_model)
+            joint = causal_eval(Xteste, Xtestc, Yteste, joint_model)
+            joint_err = min(joint_err, joint)
             j += 1
         end
+    end    
+    return (marg_err, joint_err)
+end
+
+function RFF_koopman_causality_v1(Xe, Xc, Ye, Xteste, Xtestc, Yteste, N_features, σs, N_samples; parallel=false)
+    if parallel
+        batches = Iterators.partition(σs, div(length(σs), Threads.nthreads(), RoundUp))
+        tasks = map(batches) do batch
+            Threads.@spawn RFF_koopman_causality_base(Xe, Xc, Ye, Xteste, Xtestc, Yteste, N_features, batch, N_samples)
+        end
+        results = fetch.(tasks)
+        marg_err = mapreduce(r->r[1], min, results)
+        joint_err = mapreduce(r->r[2], min, results)
+    else
+        marg_err, joint_err = RFF_koopman_causality_base(Xe, Xc, Ye, Xteste, Xtestc, Yteste, N_features, σs, N_samples)
     end
-    marg_err = minimum(margs)
-    joint_err = minimum(joints)
-    
+    return marg_err - joint_err
+end
+
+function RFF_koopman_causality_v2(Xe, Xc, Ye, Xteste, Xtestc, Yteste, N_features, σs, N_samples; parallel=false)
+    if parallel
+        marg_err = Threads.Atomic{Float64}(Inf)
+        joint_err = Threads.Atomic{Float64}(Inf)
+        Threads.@threads for σ in σs
+            local_marg_err, local_joint_err = RFF_koopman_causality_base(Xe, Xc, Ye, Xteste, Xtestc, Yteste, N_features, [σ], N_samples)
+            Threads.atomic_min!(marg_err, local_marg_err)
+            Threads.atomic_min!(joint_err, local_joint_err)
+        end
+        marg_err = marg_err[]
+        joint_err = joint_err[]
+    else
+        marg_err, joint_err = RFF_koopman_causality_base(Xe, Xc, Ye, Xteste, Xtestc, Yteste, N_features, σs, N_samples)
+    end
     return marg_err - joint_err
 end
