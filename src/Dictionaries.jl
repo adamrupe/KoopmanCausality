@@ -1,11 +1,8 @@
-# struct Dictionary{T} <: AbstractDictionary where T <:Number
-#     Ψ::Vector{Function}
-#     eltype::T
-# end
 struct Dictionary <: AbstractDictionary 
     Ψ::Vector{Function}
     eltype::Type
 end
+	
 
 Base.length(d::Dictionary) = Base.length(d.Ψ)
 Base.enumerate(d::Dictionary) = Base.enumerate(d.Ψ)

@@ -106,7 +106,15 @@ function RFF_koopman_causality_base(Xe, Xc, Ye, Xteste, Xtestc, Yteste, N_featur
     return (marg_err, joint_err)
 end
 
-function RFF_koopman_causality_v1(Xe, Xc, Ye, Xteste, Xtestc, Yteste, N_features, σs, N_samples; parallel=false)
+function RFF_koopman_causality(Xe, Xc, Ye, Xteste, Xtestc, Yteste, N_features, σs, N_samples)
+    marg_err, joint_err = RFF_koopman_causality_base(Xe, Xc, Ye, Xteste, Xtestc, Yteste, N_features, σs, N_samples)
+    return marg_err - joint_err
+end
+
+"""
+Trying different ways of multithread processing
+"""
+function RFF_koopman_causality_p1(Xe, Xc, Ye, Xteste, Xtestc, Yteste, N_features, σs, N_samples; parallel=false)
     if parallel
         batches = Iterators.partition(σs, div(length(σs), Threads.nthreads(), RoundUp))
         tasks = map(batches) do batch
@@ -121,7 +129,10 @@ function RFF_koopman_causality_v1(Xe, Xc, Ye, Xteste, Xtestc, Yteste, N_features
     return marg_err - joint_err
 end
 
-function RFF_koopman_causality_v2(Xe, Xc, Ye, Xteste, Xtestc, Yteste, N_features, σs, N_samples; parallel=false)
+"""
+Trying different ways of multithread processing
+"""
+function RFF_koopman_causality_p2(Xe, Xc, Ye, Xteste, Xtestc, Yteste, N_features, σs, N_samples; parallel=false)
     if parallel
         marg_err = Threads.Atomic{Float64}(Inf)
         joint_err = Threads.Atomic{Float64}(Inf)

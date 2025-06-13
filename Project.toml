@@ -1,10 +1,11 @@
-name = "KEWTip"
-authors = ["Adam Rupe <adam.rupe@pnnl.gov>"]
+name = "KoopmanCausality"
+authors = ["Adam Rupe <adamtrupe@gmail.com>"]
 
 [deps]
 Arpack = "7d9fca2a-8960-54d3-9f78-7d1dccf2cb97"
 Associations = "614afb3a-e278-4863-8805-9959372b9ec2"
 DifferentialEquations = "0c46a032-eb83-5123-abaf-570d42b7fbaa"
+Distances = "b4f34e82-e78d-54a5-968a-f98e89d6e8f7"
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
 DynamicalSystems = "61744808-ddfa-5f27-97ff-6e42cc95d634"
 IJulia = "7073ff75-c697-5162-941a-fcdaad2a7d2a"
