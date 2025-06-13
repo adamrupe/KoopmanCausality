@@ -53,6 +53,7 @@ export
     causal_DMD,
     causal_eval,
     koopman_causality,
-    RFF_koopman_causality_v1,
-    RFF_koopman_causality_v2
+    RFF_koopman_causality,
+    RFF_koopman_causality_p1,
+    RFF_koopman_causality_p2
 end
