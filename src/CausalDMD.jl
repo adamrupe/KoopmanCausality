@@ -56,28 +56,28 @@ function causal_eval(X1test::AbstractMatrix, X2test::AbstractMatrix, Ytest::Abst
     return mse(predictions, Ytest)
 end
 
-function koopman_causality(
-    X1::AbstractMatrix,
-    X2::AbstractMatrix,
-    Y::AbstractMatrix,
-    X1test::AbstractMatrix,
-    X2test::AbstractMatrix,
-    Ytest::AbstractMatrix,
-    marginal_dict::AbstractDictionary,
-    joint_dict::AbstractDictionary;
-    rectify::Bool = true
-)
-    marginal_model = causal_DMD(X1, Y, marginal_dict)
-    joint_model = causal_DMD(X1, X2, Y, joint_dict)
-    marg_err = causal_eval(X1test, Ytest, marginal_model)
-    joint_err = causal_eval(X1test, X2test, Ytest, joint_model)
-    cause = marg_err - joint_err
-    if cause < 0 && rectify
-        return 0.0
-    else
-        return cause
-    end
-end
+# function koopman_causality(
+#     X1::AbstractMatrix,
+#     X2::AbstractMatrix,
+#     Y::AbstractMatrix,
+#     X1test::AbstractMatrix,
+#     X2test::AbstractMatrix,
+#     Ytest::AbstractMatrix,
+#     marginal_dict::AbstractDictionary,
+#     joint_dict::AbstractDictionary;
+#     rectify::Bool = true
+# )
+#     marginal_model = causal_DMD(X1, Y, marginal_dict)
+#     joint_model = causal_DMD(X1, X2, Y, joint_dict)
+#     marg_err = causal_eval(X1test, Ytest, marginal_model)
+#     joint_err = causal_eval(X1test, X2test, Ytest, joint_model)
+#     cause = marg_err - joint_err
+#     if cause < 0 && rectify
+#         return 0.0
+#     else
+#         return cause
+#     end
+# end
 
 
 function RFF_koopman_causality_base(Xe, Xc, Ye, Xteste, Xtestc, Yteste, N_features, σs, N_samples)
