@@ -86,7 +86,6 @@ function RFF_koopman_causality_base(Xe, Xc, Ye, Xteste, Xtestc, Yteste, N_featur
     marg_err = Inf
     joint_err = Inf
 
-    j = 1
     for σ in σs
         for _ in 1:N_samples
             marg_dist = Normal(0.0, σ)
@@ -100,7 +99,6 @@ function RFF_koopman_causality_base(Xe, Xc, Ye, Xteste, Xtestc, Yteste, N_featur
             joint_model = causal_DMD(Xe, Xc, Ye, joint_dict)
             joint = causal_eval(Xteste, Xtestc, Yteste, joint_model)
             joint_err = min(joint_err, joint)
-            j += 1
         end
     end    
     return (marg_err, joint_err)
